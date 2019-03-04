@@ -67,12 +67,6 @@ def urlencode_filter(s):
     s = urllib.parse.quote(s)
     return Markup(s)
 
-#def do_GET(s):
-#	s.send_response(200)
-#	s.send_header("Content-type","application/json; charset=utf-8")
-#	s.end_headers()
-#	s.wfile.write(generateDirectory("internal"))
-
 def printUsage():
 	print("Usage: server.py")
 
