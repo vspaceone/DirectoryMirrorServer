@@ -27,9 +27,6 @@ VERSION_PATCH = 0
 VERSION = "v"+str(VERSION_MAJOR)+"."+str(VERSION_MINOR)+"."+str(VERSION_PATCH)
 
 
-PORT = 8080
-IP = "0.0.0.0"
-
 # Setting up logger
 logger = logging.getLogger('DirectoryMirrorServer.py')
 logger.setLevel(logging.DEBUG)
