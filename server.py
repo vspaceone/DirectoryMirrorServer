@@ -146,4 +146,4 @@ def getSpaceJSON(spacename):
             return ('{"error":"Could not load json!", "errorcode":-2}',404)
 
 
-app.run()
+app.run(port=5001)
