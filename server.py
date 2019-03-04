@@ -60,6 +60,16 @@ logger.info("Starting DirectoryMirrorServer...")
 signal.signal(signal.SIGTERM, sigterm_handler)
 signal.signal(signal.SIGINT, sigint_handler)
 
+
+from markupsafe import Markup
+@app.template_filter('urlencode')
+def urlencode_filter(s):
+    if type(s) == 'Markup':
+        s = s.unescape()
+    s = s.encode('utf8')
+    s = urllib.parse.quote(s)
+    return Markup(s)
+
 #def do_GET(s):
 #	s.send_response(200)
 #	s.send_header("Content-type","application/json; charset=utf-8")
@@ -71,7 +81,15 @@ def printUsage():
 
 @app.route("/")
 def showHome():
-	resp = flask.make_response(flask.render_template('home.html', version=VERSION), 200)
+	f =  open('directory.json')
+	data = json.load(f)
+	resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
+	resp.headers["Content-type"] = "text/html; charset=utf-8"
+	return resp
+
+@app.route("/doc")
+def showDoc():
+	resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
@@ -86,11 +104,34 @@ def showSpace(spacename):
 	resp.headers["Content-type"] = "application/json; charset=utf-8"
 	return resp
 
-@app.route("/stats/<spacename>.html")
+@app.route("/stats/<everything:spacename>.html")
 def showSpaceStats(spacename):
-	resp = flask.make_response(flask.render_template('overview.html', showname=showname), 200)
+	(template, api, code) = getStatsPage(spacename)
+	resp = flask.make_response(flask.render_template(template, version=VERSION, api=api), code)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
+
+def getStatsPage(spacename):
+    with open('directory.json') as f:
+        data = json.load(f)
+        spacename = urllib.parse.unquote(spacename)
+        logger.info("Looking up: "+spacename)
+        try:
+            URL = data[spacename]
+        except:
+            logger.warn("Space not in directory!")
+            return ("spacestatsError.html",json.loads('{"error":"Space not in directory!", "errorcode":-4}'),404)
+
+        try:
+            r = json.loads(requests.get(url=URL).text)
+            if r["api"] == "0.13":
+                return ("spacestatsv0.13.html",r,200)
+            else:
+                logger.warn("No template for this api version!")
+                return ("spacestatsError.html",json.loads('{"error":"No template for this api version!", "errorcode":-5}'),404)
+        except:
+            logger.warn("Could not load json!")
+            return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404)
 
 def getSpaceJSON(spacename):
     with open('directory.json') as f:
