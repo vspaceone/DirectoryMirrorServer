@@ -71,7 +71,7 @@ def printUsage():
 
 @app.route("/")
 def showHome():
-	resp = flask.make_response(flask.render_template('home.html', version="v"+str(VERSION_MAJOR)), 200)
+	resp = flask.make_response(flask.render_template('home.html', version=VERSION), 200)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
