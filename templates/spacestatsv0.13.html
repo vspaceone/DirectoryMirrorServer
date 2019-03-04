@@ -24,15 +24,18 @@
       font-size: 1.3em
     }
     .card {
-      margin: 4px;
+      margin: 1%;
+      width: 98%;
+      float:left;
     }
   </style>
 </head>
 
 <body>
 <h1>DirectoryMirrorServer {{version}}</h1>
-<div class="card" style="width: 100%;">
-  <img class="card-img-top" src="{{api.logo}}" alt="logo" style="width:25%; margin: auto">
+<div id="cards" >
+<div class="card">
+  <img class="card-img-top" src="{{api.logo}}" alt="logo" style="padding: 5px; max-width:20%; max-height:20%; margin: auto">
   <div class="card-body">
     <h5 class="card-title">{{api.space}}</h5>
     <p class="card-text">API Version: {{api.api}}</p>
@@ -42,7 +45,7 @@
   </div>
 </div>
 
-<div class="card" style="width: 100%;">
+<div class="card">
   <div class="card-body">
     <h5 class="card-title">Contact</h5>
     <p class="card-text">Email: {{api.contact.email}}</p>
@@ -50,9 +53,20 @@
     <p class="card-text">IRC: {{api.contact.irc}}</p>
     <p class="card-text">Twitter: {{api.contact.twitter}}</p>
     <p class="card-text">Phone: {{api.contact.phone}}</p>
-    <p class="card-text"><div id="mapdiv" style="width: 100%; height: 66%;"></div></p>
   </div>
 </div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Map</h5>
+    <p class="card-text"><div id="mapdiv" style="widht: 100%; height: 300px;"></div></p>
+  </div>
+</div>
+
+
+</div>
+
+<div style="clear: both;"></div>
 
 <div style="margin:auto">
   <p><a href="/">zurück</a></p>
