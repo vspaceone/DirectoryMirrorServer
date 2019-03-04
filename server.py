@@ -144,3 +144,6 @@ def getSpaceJSON(spacename):
             return (requests.get(url=URL).text,200)
         except:
             return ('{"error":"Could not load json!", "errorcode":-2}',404)
+
+
+app.run()
