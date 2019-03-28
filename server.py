@@ -78,7 +78,7 @@ def printUsage():
 
 @app.route("/")
 def showHome():
-	f =  open('directory.json')
+	f =  open('directory.json',encoding='utf-8')
 	data = json.load(f)
 	resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
@@ -109,7 +109,7 @@ def showSpaceStats(spacename):
 	return resp
 
 def getStatsPage(spacename):
-    with open('directory.json') as f:
+    with open('directory.json',encoding='utf-8') as f:
         data = json.load(f)
         spacename = urllib.parse.unquote(spacename)
         logger.info("Looking up: "+spacename)
@@ -131,7 +131,7 @@ def getStatsPage(spacename):
             return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404)
 
 def getSpaceJSON(spacename):
-    with open('directory.json') as f:
+    with open('directory.json',encoding='utf-8') as f:
         data = json.load(f)
         spacename = urllib.parse.unquote(spacename)
         logger.info("Looking up: "+spacename)
