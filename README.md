@@ -1,6 +1,17 @@
 # SpaceAPI Directory Mirror
 
 ## Install
+```
+conda create --name directorymirrorserver python=3.5
+conda activate directorymirrorserver
+pip install flask requests
+```
+
+## Run
+```
+conda activate directorymirrorserver
+bash run.sh
+```
 
 ### Apache2
 Setze `AllowEncodedSlashes On` in der Route.
