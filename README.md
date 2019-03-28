@@ -1,6 +1,8 @@
 # SpaceAPI Directory Mirror
 
 ## Install
+Install anaconda.
+
 ```
 conda create --name directorymirrorserver python=3.5
 conda activate directorymirrorserver
