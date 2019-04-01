@@ -32,7 +32,7 @@
 <div class="card" style="width: 100%;">
   <div class="card-body">
     <h5 class="card-title">Loading the directory</h5>
-    <p class="card-text">Link to directory: <a href="/directory.json">directory.json</a></p>
+    <p class="card-text">Link to directory: <a href="/spaces">/spaces</a></p>
     <a href="/directory.json" class="btn btn-primary">try it!</a>
   </div>
 </div>
@@ -42,10 +42,10 @@
     <h5 class="card-title">Loading spaceapi</h5>
     <p class="card-text">To load a space use
       <pre>
-        GET /spaces/:spacename:.json
+        GET /spaces/:spacename:
       </pre>
     The <code>:spacename:</code> variable is the urlencoded version of the name in the directory. E.g. <code>%2Fdev%2Ftal</code>.</p>
-    <a href="spaces/%2Fdev%2Ftal.json" class="btn btn-primary"><b>Example:</b> /spaces/%2Fdev%2Ftal.json</a>
+    <a href="spaces/%2Fdev%2Ftal" class="btn btn-primary"><b>Example:</b> /spaces/%2Fdev%2Ftal</a>
   </div>
 </div>
 
@@ -57,8 +57,8 @@
         GET /stats/:spacename:.html
       </pre>
     to show a stats site.</p>
-    <p><b>Example:</b> <code>http://127.0.0.1:5000/stats/%2Fdev%2Ftal.html</code></p>
-    <a href="stats/%2Fdev%2Ftal.html" class="btn btn-primary"><b>Example:</b> /stats/%2Fdev%2Ftal.html</a>
+    <p><b>Example:</b> <code>stats/%2Fdev%2Ftal.html</code></p>
+    <a href="stats/%2Fdev%2Ftal.html" class="btn btn-primary"><b>Example:</b> stats/%2Fdev%2Ftal.html</a>
   </div>
 </div>
 

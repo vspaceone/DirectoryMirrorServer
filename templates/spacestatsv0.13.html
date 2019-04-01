@@ -38,7 +38,7 @@
   <img class="card-img-top" src="{{api.logo}}" alt="logo" style="padding: 5px; max-width:20%; max-height:20%; margin: auto">
   <div class="card-body">
     <h5 class="card-title">{{api.space}}</h5>
-    <p class="card-text">API Version: {{api.api}}</p>
+    <p class="card-text">API Version: <a href="/spaces/{{spacename | urlencode}}">{{api.api}}</a></p>
     <p class="card-text">Webseite: <a href="{{api.url}}">{{api.url}}</a></p>
     <p class="card-text">Ort: {{api.location.address}}</p>
     <p class="card-text">Doorstate: {{api.state.open}}</p>

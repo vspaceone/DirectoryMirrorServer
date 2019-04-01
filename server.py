@@ -72,7 +72,7 @@ def printUsage():
 
 @app.route("/")
 def showHome():
-	f =  open('directory.json',encoding='utf-8')
+	f =  open('directory.json')
 	data = json.load(f)
 	resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
@@ -98,7 +98,7 @@ def showSpace(spacename):
 @app.route("/stats/<everything:spacename>.html")
 def showSpaceStats(spacename):
 	(template, api, code) = getStatsPage(spacename)
-	resp = flask.make_response(flask.render_template(template, version=VERSION, api=api), code)
+	resp = flask.make_response(flask.render_template(template, version=VERSION, api=api, spacename=spacename), code)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
@@ -110,18 +110,22 @@ def getStatsPage(spacename):
         try:
             URL = data[spacename]
         except:
-            logger.warning("Space not in directory!")
+            logger.warn("Space not in directory!")
             return ("spacestatsError.html",json.loads('{"error":"Space not in directory!", "errorcode":-4}'),404)
 
         try:
             r = json.loads(requests.get(url=URL).text)
             if r["api"] == "0.13":
-                return ("spacestatsv0.13.html",r,200)
+                if r["state"] and r["location"] and r["contact"]:
+                    return ("spacestatsv0.13.html", r, 200)
+                else:
+                    logger.warn("No valid SpaceAPI found!")
+                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404)
             else:
-                logger.warning("No template for this api version!")
-                return ("spacestatsError.html",json.loads('{"error":"No template for this api version!", "errorcode":-5}'),404)
+                logger.warn("No template for this api version!")
+                return ("spacestatsError.html",json.loads('{"error":"No template for this api version! '+r["api"]+'", "errorcode":-5}'),404)
         except:
-            logger.warning("Could not load json!")
+            logger.warn("Could not load json!")
             return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404)
 
 def getSpaceJSON(spacename):
