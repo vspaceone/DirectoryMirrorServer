@@ -1,0 +1,146 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://openlayers.org/en/v4.6.5/build/ol-debug.js"></script>
+  <style>
+    body {
+      margin: 50px;
+      background-color: #F5F5F5;
+
+    }
+    h1 {
+      margin: 30px;
+    }
+    h2 {
+      font-size: 1.3em
+    }
+    .card {
+      margin: 1%;
+      width: 98%;
+      float:left;
+    }
+  </style>
+</head>
+
+<body>
+<h1>DirectoryMirrorServer {{version}}</h1>
+<div id="cards" >
+<div class="card">
+  <img class="card-img-top" src="{{api.logo}}" alt="logo" style="padding: 5px; max-width:20%; max-height:20%; margin: auto">
+  <div class="card-body">
+    <h5 class="card-title">{{api.space}}</h5>
+    <p class="card-text">API Version: <a href="/spaces/{{spacename | urlencode}}">{{api.api}}</a></p>
+    <p class="card-text">Webseite: <a href="{{api.url}}">{{api.url}}</a></p>
+    <p class="card-text">Ort: {{api.address}}</p>
+    <p class="card-text">Doorstate: {{api.open}}</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Contact</h5>
+    <p class="card-text">Email: {{api.contact.email}}</p>
+    <p class="card-text">ML: {{api.contact.ml}}</p>
+    <p class="card-text">IRC: {{api.contact.irc}}</p>
+    <p class="card-text">Twitter: {{api.contact.twitter}}</p>
+    <p class="card-text">Phone: {{api.contact.phone}}</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Map</h5>
+    <p class="card-text"><div id="mapdiv" style="widht: 100%; height: 300px;"></div></p>
+  </div>
+</div>
+
+
+</div>
+
+<div style="clear: both;"></div>
+
+<div style="margin:auto">
+  <p><a href="/">zurück</a></p>
+</div>
+<script type="text/javascript">
+      var openSpaces = new ol.source.Vector();
+      var closedSpaces = new ol.source.Vector();
+
+      var styleOpen = [
+          new ol.style.Style({
+              image: new ol.style.Circle({
+                  radius: 10,
+                  fill: new ol.style.Fill({
+                      color: '#00FF00'
+                  }),
+                  stroke: new ol.style.Stroke({
+                      width: 1,
+                      color: 'black'
+                  })
+              })
+          })
+      ];
+
+      var styleClosed = [
+          new ol.style.Style({
+              image: new ol.style.Circle({
+                  radius: 10,
+                  fill: new ol.style.Fill({
+                      color: '#FF0000'
+                  }),
+                  stroke: new ol.style.Stroke({
+                      width: 1,
+                      color: 'black'
+                  })
+              })
+          })
+      ];
+
+      var vectorOpen = new ol.layer.Vector({
+          source: openSpaces,
+          style: styleOpen
+      });
+
+      var vectorClosed = new ol.layer.Vector({
+          source: closedSpaces,
+          style: styleClosed
+      });
+
+      var p = new ol.geom.Point(ol.proj.transform([{{api.lon}},{{api.lat}}], 'EPSG:4326', 'EPSG:3857'));
+      var f = new ol.Feature({
+          geometry: p
+      });
+
+      if("{{api.open}}" == "True"){
+        openSpaces.addFeature(f);
+      }else{
+        closedSpaces.addFeature(f);
+      }
+
+      var map = new ol.Map({
+        target: 'mapdiv',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          }),
+          vectorOpen,
+          vectorClosed
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([{{api.lon}}, {{api.lat}}]),
+          zoom: 10
+        })
+      });
+    </script>
+
+</body>
+</html>

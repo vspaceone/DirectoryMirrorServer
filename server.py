@@ -121,6 +121,14 @@ def getStatsPage(spacename):
                 else:
                     logger.warn("No valid SpaceAPI found!")
                     return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404)
+            elif r["api"] == "0.12" or r["api"] == "0.11" or ["api"] == "0.10" or ["api"] == "0.9":
+                if r["contact"]:
+                    return ("spacestatsv0.12.html", r, 200)
+                else:
+                    logger.warn("No valid SpaceAPI found!")
+                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404)
+            elif r["api"] == "0.8":
+                return ("spacestatsv0.8.html", r, 200)
             else:
                 logger.warn("No template for this api version!")
                 return ("spacestatsError.html",json.loads('{"error":"No template for this api version! '+r["api"]+'", "errorcode":-5}'),404)
