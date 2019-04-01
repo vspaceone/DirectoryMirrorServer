@@ -78,17 +78,17 @@ def showHome():
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
-@app.route("/doc")
+@app.route("/doc.html")
 def showDoc():
 	resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
-@app.route("/directory.json")
+@app.route("/spaces")
 def showDirectory():
 	return flask.send_from_directory('', "directory.json")
 
-@app.route("/spaces/<everything:spacename>.json")
+@app.route("/spaces/<everything:spacename>")
 def showSpace(spacename):
 	(r,code) = getSpaceJSON(spacename)
 	resp = flask.make_response(r,code)
@@ -110,7 +110,7 @@ def getStatsPage(spacename):
         try:
             URL = data[spacename]
         except:
-            logger.warn("Space not in directory!")
+            logger.warning("Space not in directory!")
             return ("spacestatsError.html",json.loads('{"error":"Space not in directory!", "errorcode":-4}'),404)
 
         try:
@@ -118,10 +118,10 @@ def getStatsPage(spacename):
             if r["api"] == "0.13":
                 return ("spacestatsv0.13.html",r,200)
             else:
-                logger.warn("No template for this api version!")
+                logger.warning("No template for this api version!")
                 return ("spacestatsError.html",json.loads('{"error":"No template for this api version!", "errorcode":-5}'),404)
         except:
-            logger.warn("Could not load json!")
+            logger.warning("Could not load json!")
             return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404)
 
 def getSpaceJSON(spacename):
