@@ -57,7 +57,7 @@ def loadSpaceAPI(spacename,url,points,directory):
                 directory.append({"name":spacename,"apistate":"0.13","url":url})
                 if r["state"]["open"] == True:
                     door = 1
-                else
+                else:
                     door = 0
                     p = {
                         "measurement": spacename,
