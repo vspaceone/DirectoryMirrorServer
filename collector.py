@@ -47,7 +47,7 @@ def loadSpaceAPI(spacename,url,points,directory):
         directory.append({"name":spacename,"apistate":"not available","url":url})
         logger.error(spacename + ": " + str(e))
         return
-    
+
     try:
         if r["api"] == "0.13":
             try:
@@ -55,18 +55,18 @@ def loadSpaceAPI(spacename,url,points,directory):
                     logger.info("invalid")
 
                 directory.append({"name":spacename,"apistate":"0.13","url":url})
-								if r["state"]["open"] == True:
-									door = 1
-								else
-									door = 0
-									p = {
-											"measurement": spacename,
-											"fields": {
-												"doorstate": door
-												}
-											}
-									print(p)
-									points.append(p)
+                if r["state"]["open"] == True:
+                    door = 1
+                else
+                    door = 0
+                    p = {
+                        "measurement": spacename,
+                            "fields": {
+                                "doorstate": door
+                            }
+                        }
+                    print(p)
+                    points.append(p)
             except Exception as e:
                 logger.info(spacename + ":" + str(e))
                 directory.append({"name":spacename,"apistate":"invalid","url":url})
@@ -129,7 +129,7 @@ if __name__ == '__main__':
             d = [ x for x in directory]
             f.write(json.dumps(d))
             f.close()
-    
+
     if USE_INFLUX:
         logger.info("Write to INFLUX" + str(points))
         client.write_points(points)
