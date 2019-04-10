@@ -24,6 +24,59 @@
     .card {
       margin: 4px;
     }
+
+    .style-0_13{
+      color: green;
+      border-color: green;
+    }
+
+    .style-0_12{
+      color: green;
+      border-color: green;
+    }
+
+    .style-0_11{
+      color: green;
+      border-color: green;
+    }
+
+    .style-0_10{
+      color: green;
+      border-color: green;
+    }
+
+    .style-0_9{
+      color: green;
+      border-color: green;
+    }
+
+    .style-0_8{
+      color: green;
+      border-color: green;
+    }
+
+    .style-invalid{
+      color: red;
+      border-color: red;
+    }
+
+    .style-not_available{
+      color: red;
+      border-color: red;
+    }
+
+    .style-unknown_version{
+      color: red;
+      border-color: red;
+    }
+
+    .json-note{
+      font-size: 0.6em;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 2px;
+      padding: 2px;
+    }
   </style>
 </head>
 
@@ -37,7 +90,7 @@
     <p class="card-text">
       <ul>
         {% for item in directory %}
-        <li><a href="/stats/{{item | urlencode}}.html">{{item}}</a> <a style="font-size: 0.6em;" href="/spaces/{{item | urlencode}}">json</a></li>
+        <li><a href="/stats/{{item.name | urlencode}}.html">{{item.name}}</a> <a class="json-note style-{{item.apistate | replace(".","_")|replace(" ","_")}} label"  href="/spaces/{{item.name | urlencode}}">{{item.apistate}}</a></li>
         {% endfor %}
       </ul>
     </p>
@@ -51,7 +104,16 @@
 <div class="card" style="width: 100%;">
   <div class="card-body">
     <h5 class="card-title">You want to add your space to the directory?</h5>
-    <p class="card-text">Make PullRequest to <a href="https://github.com/vspaceone/DirectoryMirrorServer">https://github.com/vspaceone/DirectoryMirrorServer</a>.</p>
+    <p class="card-text">The directory file is originally maintained by <a href="https://fixme.ch/">FIXME Hackerspace</a>. You should make a PullRequest to <a href="https://github.com/fixme-lausanne/OpenSpaceDirectory">this GitHub Repository</a>. The DirectoryMirrorServer is only mirroring this one.</a></p>
+
+  </div>
+</div>
+
+<div class="card" style="width: 100%;">
+  <div class="card-body">
+    <h5 class="card-title">Contribute?</h5>
+    <p class="card-text">Make PullRequests to <a href="https://github.com/vspaceone/DirectoryMirrorServer">https://github.com/vspaceone/DirectoryMirrorServer</a>.</p>
+
   </div>
 </div>
 

@@ -45,12 +45,12 @@ def add_header(response):
     return response
 
 def sigterm_handler(_signo,_stack_frame):
-	logger.info("SIGTERM received. Cleaning up...")
-	sys.exit(0)
+    logger.info("SIGTERM received. Cleaning up...")
+    sys.exit(0)
 
 def sigint_handler(_signo, _stack_frame):
-	logger.info("SIGINT received. Cleaning up...")
-	sys.exit(0)
+    logger.info("SIGINT received. Cleaning up...")
+    sys.exit(0)
 
 logger.info("Running version "+VERSION)
 logger.info("Starting DirectoryMirrorServer...")
@@ -68,25 +68,29 @@ def urlencode_filter(s):
     return Markup(s)
 
 def printUsage():
-	print("Usage: server.py")
+    print("Usage: server.py")
 
 @app.route("/")
 def showHome():
-	f =  open('directory.json')
-	data = json.load(f)
-	resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
-	resp.headers["Content-type"] = "text/html; charset=utf-8"
-	return resp
+    f =  open('directory_crawled.json')
+    data = json.load(f)
+    resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
+    resp.headers["Content-type"] = "text/html; charset=utf-8"
+    return resp
 
 @app.route("/doc.html")
 def showDoc():
-	resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
-	resp.headers["Content-type"] = "text/html; charset=utf-8"
-	return resp
+    resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
+    resp.headers["Content-type"] = "text/html; charset=utf-8"
+    return resp
 
 @app.route("/spaces")
 def showDirectory():
 	return flask.send_from_directory('', "directory.json")
+
+@app.route("/spaces_crawled")
+def showDirectoryCrawled():
+	return flask.send_from_directory('', "directory_crawled.json")
 
 @app.route("/spaces/<everything:spacename>")
 def showSpace(spacename):

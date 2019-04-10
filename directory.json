@@ -36,7 +36,7 @@
   "Chaostreff Recklinghausen c3RE":"http://doorstatus.c3re.de/status/json",
   "Chaostreff Salzburg":"https://spaceapi.sbg.chaostreff.at/status/json",
   "Chaostreff-Dortmund":"http://status.ctdo.de/api/spaceapi/v13",
-  "Chaostreff Zürich": "https://www.ccczh.ch/api/v13/",
+  "Chaostreff ZÃ¼rich": "https://www.ccczh.ch/api/v13/",
   "Coredump":"https://status.crdmp.ch/",
   "Das Labor":"https://das-labor.org/status/api",
   "DevLoL":"https://devlol.org/status/hackerspaceapi/",
@@ -144,7 +144,7 @@
   "Ume\u00e5 Hackerspace":"http://umeahackerspace.se:12345/spaceapi.json",
   "UrLab":"https://urlab.be/spaceapi.json",
   "VoidWarranties":"http://spaceapi.voidwarranties.be",
-  "Warpzone e.V.":"https://www.warpzone.ms/api/spaceapi.php",
+  "Warpzone e.V.":"https://api.warpzone.ms/spaceapi",
   "Warsaw Hackerspace":"https://hackerspace.pl/spaceapi",
   "Wolfplex Hackerspace":"https://api.wolfplex.be/space",
   "[hsmr]":"https://hsmr.cc/spaceapi.json",
@@ -169,5 +169,6 @@
   "vspace.one":"https://vspace.one/spaceapi.json",
   "xHain":"https://x-hain.de/spaceapi-0.13.json",
   "Ko-Lab":"https://ko-lab.space/spaceapi/",
-  "UN-Hack-Bar":"https://keinanschluss.un-hack-bar.de/spaceapi.json"
+  "UN-Hack-Bar":"https://keinanschluss.un-hack-bar.de/spaceapi.json",
+  "z-Labor Zwickau":"http://api.service.z-labor.space/spaceapi.json"
 }
