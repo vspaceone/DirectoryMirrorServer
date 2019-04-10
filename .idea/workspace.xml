@@ -40,7 +40,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
+            <state relative-caret-position="288">
               <caret line="92" column="131" selection-start-line="92" selection-start-column="131" selection-end-line="92" selection-end-column="131" />
             </state>
           </provider>
@@ -166,7 +166,14 @@
       <option name="project" value="LOCAL" />
       <updated>1554911661033</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="add collector">
+      <created>1554911887017</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1554911887017</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -197,7 +204,8 @@
     <MESSAGE value="Pump version" />
     <MESSAGE value="Support version 0.8 - 0.12 also" />
     <MESSAGE value="Add collector to really mirror, save apistate in crawled file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add collector to really mirror, save apistate in crawled file" />
+    <MESSAGE value="add collector" />
+    <option name="LAST_COMMIT_MESSAGE" value="add collector" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/templates/spacestatsv0.12.html">
@@ -244,7 +252,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
+        <state relative-caret-position="288">
           <caret line="92" column="131" selection-start-line="92" selection-start-column="131" selection-end-line="92" selection-end-column="131" />
         </state>
       </provider>
