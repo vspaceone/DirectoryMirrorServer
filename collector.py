@@ -59,14 +59,14 @@ def loadSpaceAPI(spacename,url,points,directory):
 									door = 1
 								else
 									door = 0
-                p = {
-                    "measurement": spacename,
-                    "fields": {
-                        "doorstate": door
-                    }
-                }
-                print(p)
-                points.append(p)
+									p = {
+											"measurement": spacename,
+											"fields": {
+												"doorstate": door
+												}
+											}
+									print(p)
+									points.append(p)
             except Exception as e:
                 logger.info(spacename + ":" + str(e))
                 directory.append({"name":spacename,"apistate":"invalid","url":url})
