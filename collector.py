@@ -13,7 +13,7 @@ from multiprocessing import Process, Manager
 from ApiParser import parser13
 
 DBNAME = "SPACEAPI_STATS"
-USE_INFLUX = False
+USE_INFLUX = True
 USE_EXPORT_DIRECTORY = True
 
 
