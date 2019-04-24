@@ -39,7 +39,7 @@ def parse(spacename,r):
         if "temperature" in r["sensors"]:
             for temp in r["sensors"]["temperature"]:
                 print(temp)
-                p["fields"]["temperature/"+temp["location"]+temp["unit"]] = temp["value"]
+                p["fields"]["temperature/"+temp["location"]+temp["unit"]] = float(temp["value"])
 
     print(p)
     return p
