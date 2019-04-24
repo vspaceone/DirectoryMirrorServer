@@ -10,8 +10,10 @@ import jsonschema
 from influxdb import InfluxDBClient
 from multiprocessing import Process, Manager
 
+from ApiParser import parser13
+
 DBNAME = "SPACEAPI_STATS"
-USE_INFLUX = False
+USE_INFLUX = True
 USE_EXPORT_DIRECTORY = True
 
 
@@ -70,18 +72,7 @@ def loadSpaceAPI(spacename,url,points,directory):
                 return
 
             directory.append({"name":spacename,"apistate":"0.13","url":url})
-            if r["state"]["open"] is True:
-                door = 1
-            else:
-                door = 0
-            p = {
-                "measurement": spacename,
-                    "fields": {
-                        "doorstate": door
-                    }
-                }
-            print(p)
-            points.append(p)
+            points.append(parser13.parse(spacename,r))
 
         if r["api"] == "0.12":
             try:
@@ -122,7 +113,7 @@ def loadSpaceAPI(spacename,url,points,directory):
 
             directory.append({"name":spacename,"apistate":"0.8","url":url})
     except Exception as e:
-        logger.error(spacename + ": " + str(spacename))
+        logger.error(spacename + ": " + str(spacename) + " - " + str(e))
         directory.append({"name":spacename,"apistate":"unknown version","url":url})
 
 
