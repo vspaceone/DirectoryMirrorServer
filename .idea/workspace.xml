@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bbc8cf23-1e4f-4f66-a62e-56db76e08f2f" name="Default Changelist" comment="Add temperatures to influx">
-      <change afterPath="$PROJECT_DIR$/ApiParser/__init__py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ApiParser/parser13.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DirectoryMirrorServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DirectoryMirrorServer.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bbc8cf23-1e4f-4f66-a62e-56db76e08f2f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ApiParser/parser13.py" beforeDir="false" afterPath="$PROJECT_DIR$/ApiParser/parser13.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/directory.json" beforeDir="false" afterPath="$PROJECT_DIR$/directory.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/directory_crawled.json" beforeDir="false" afterPath="$PROJECT_DIR$/directory_crawled.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,11 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/collector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+            <state relative-caret-position="405">
+              <caret line="27" column="88" lean-forward="true" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
               <folding>
                 <element signature="e#15#24#0" expanded="true" />
               </folding>
@@ -43,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ApiParser/parser13.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="30" lean-forward="true" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+            <state relative-caret-position="317">
+              <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
               <folding>
                 <element signature="e#15#24#0" expanded="true" />
               </folding>
@@ -77,8 +72,8 @@
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/point_13.py" />
-        <option value="$PROJECT_DIR$/ApiParser/parser13.py" />
         <option value="$PROJECT_DIR$/collector.py" />
+        <option value="$PROJECT_DIR$/ApiParser/parser13.py" />
       </list>
     </option>
   </component>
@@ -207,7 +202,21 @@
       <option name="project" value="LOCAL" />
       <updated>1556114778903</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add temperatures to influx">
+      <created>1556120090862</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1556120090862</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Write as float">
+      <created>1556121032995</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1556121032995</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -241,7 +250,9 @@
     <MESSAGE value="Add collector to really mirror, save apistate in crawled file" />
     <MESSAGE value="add collector" />
     <MESSAGE value="Added jsonschema checks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added jsonschema checks" />
+    <MESSAGE value="Add temperatures to influx" />
+    <MESSAGE value="Write as float" />
+    <option name="LAST_COMMIT_MESSAGE" value="Write as float" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/templates/spacestatsv0.12.html">
@@ -302,20 +313,20 @@
     <entry file="file://$PROJECT_DIR$/ApiParser/__init__py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ApiParser/parser13.py">
+    <entry file="file://$PROJECT_DIR$/collector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="30" lean-forward="true" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+        <state relative-caret-position="405">
+          <caret line="27" column="88" lean-forward="true" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
           <folding>
             <element signature="e#15#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/collector.py">
+    <entry file="file://$PROJECT_DIR$/ApiParser/parser13.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+        <state relative-caret-position="317">
+          <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
           <folding>
             <element signature="e#15#24#0" expanded="true" />
           </folding>
