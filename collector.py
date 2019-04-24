@@ -5,12 +5,13 @@ import logging
 import json
 import configparser
 import requests
+import jsonschema
 
 from influxdb import InfluxDBClient
 from multiprocessing import Process, Manager
 
 DBNAME = "SPACEAPI_STATS"
-USE_INFLUX = True
+USE_INFLUX = False
 USE_EXPORT_DIRECTORY = True
 
 
@@ -38,6 +39,17 @@ logger.addHandler(ch)
 logger.info("Running version " + VERSION)
 
 
+schema8 = json.load(open("schema-master/8.json"))
+schema9 = json.load(open("schema-master/9.json","r"))
+schema11 = json.load(open("schema-master/11.json","r"))
+schema12 = json.load(open("schema-master/12.json","r"))
+schema13 = json.load(open("schema-master/13.json","r"))
+schema14 = json.load(open("schema-master/14-draft.json","r"))
+
+
+
+
+
 def loadSpaceAPI(spacename,url,points,directory):
 
 
@@ -51,37 +63,66 @@ def loadSpaceAPI(spacename,url,points,directory):
     try:
         if r["api"] == "0.13":
             try:
-                if r["space"] == None or r["logo"] == None or r["url"] == None or r["location"] == None or r["location"]["lat"] == None or r["location"]["lon"] == None or r["state"] == None or r["state"]["open"] == None or r["contact"] == None or r["issue_report_channels"] == None:
-                    logger.info("invalid")
-
-                directory.append({"name":spacename,"apistate":"0.13","url":url})
-                if r["state"]["open"] is True:
-                    door = 1
-                else:
-                    door = 0
-                p = {
-                    "measurement": spacename,
-                        "fields": {
-                            "doorstate": door
-                        }
-                    }
-                print(p)
-                points.append(p)
+                jsonschema.validate(r,schema13)
             except Exception as e:
-                logger.info(spacename + ":" + str(e))
-                directory.append({"name":spacename,"apistate":"invalid","url":url})
+                logger.error("Invalid: %s" % str(spacename))
+                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                return
+
+            directory.append({"name":spacename,"apistate":"0.13","url":url})
+            if r["state"]["open"] is True:
+                door = 1
+            else:
+                door = 0
+            p = {
+                "measurement": spacename,
+                    "fields": {
+                        "doorstate": door
+                    }
+                }
+            print(p)
+            points.append(p)
+
         if r["api"] == "0.12":
+            try:
+                jsonschema.validate(r,schema12)
+            except Exception as e:
+                logger.error("Invalid: %s" % str(spacename))
+                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                return
+
             directory.append({"name":spacename,"apistate":"0.12","url":url})
         if r["api"] == "0.11":
+            try:
+                jsonschema.validate(r,schema11)
+            except Exception as e:
+                logger.error("Invalid: %s" % str(spacename))
+                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                return
+
             directory.append({"name":spacename,"apistate":"0.11","url":url})
         if r["api"] == "0.10":
             directory.append({"name":spacename,"apistate":"0.10","url":url})
         if r["api"] == "0.9":
+            try:
+                jsonschema.validate(r,schema9)
+            except Exception as e:
+                logger.error("Invalid")
+                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                return
+
             directory.append({"name":spacename,"apistate":"0.9","url":url})
         if r["api"] == "0.8":
+            try:
+                jsonschema.validate(r,schema8)
+            except Exception as e:
+                logger.error("Invalid: %s" % str(spacename))
+                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                return
+
             directory.append({"name":spacename,"apistate":"0.8","url":url})
     except Exception as e:
-        logger.error(spacename + ": " + str(e))
+        logger.error(spacename + ": " + str(spacename))
         directory.append({"name":spacename,"apistate":"unknown version","url":url})
 
 
