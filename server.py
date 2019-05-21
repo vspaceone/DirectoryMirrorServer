@@ -64,7 +64,7 @@ schema9 = json.load(open("schema-master/9.json","r"))
 schema11 = json.load(open("schema-master/11.json","r"))
 schema12 = json.load(open("schema-master/12.json","r"))
 schema13 = json.load(open("schema-master/13.json","r"))
-schema14 = json.load(open("schema-master/14-draft.json","r"))
+#schema14 = json.load(open("schema-master/14-draft.json","r"))
 
 
 from markupsafe import Markup
