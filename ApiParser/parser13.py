@@ -1,15 +1,5 @@
 #!/bin/python
 
-import os
-import logging
-import json
-import configparser
-import requests
-import jsonschema
-
-from influxdb import InfluxDBClient
-from multiprocessing import Process, Manager
-
 
 def getName(t, i):
     if "location" in i:

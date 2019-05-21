@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import os
+import os, time
 import json
 import configparser
 import sys
@@ -23,7 +23,7 @@ app.url_map.converters['everything'] = EverythingConverter
 # Constants
 VERSION_MAJOR = 0
 VERSION_MINOR = 3
-VERSION_PATCH = 0
+VERSION_PATCH = 1
 VERSION = "v"+str(VERSION_MAJOR)+"."+str(VERSION_MINOR)+"."+str(VERSION_PATCH)
 
 
@@ -74,7 +74,8 @@ def printUsage():
 def showHome():
     f =  open('directory_crawled.json')
     data = json.load(f)
-    resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data), 200)
+    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat('directory_crawled.json')
+    resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data, lastupdate=time.ctime(mtime)), 200)
     resp.headers["Content-type"] = "text/html; charset=utf-8"
     return resp
 
