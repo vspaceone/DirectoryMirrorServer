@@ -6,9 +6,10 @@ import json
 import configparser
 import requests
 import jsonschema
+import time
 
 from influxdb import InfluxDBClient
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Manager, Lock
 
 from ApiParser import parser13
 
@@ -24,7 +25,7 @@ if USE_INFLUX:
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 2
-VERSION_PATCH = 0
+VERSION_PATCH = 1
 VERSION = "v" + str(VERSION_MAJOR) + "." + str(VERSION_MINOR) + "." + str(VERSION_PATCH)
 
 logger = logging.getLogger("collector.py")
@@ -50,71 +51,103 @@ schema14 = json.load(open("schema-master/14-draft.json","r"))
 
 
 
+def addToDir(directory, spacename, apistate, url):
+    counterIdx = {
+        "sum": 0,
+        "0.13": 1,
+        "0.12": 2,
+        "0.11": 3,
+        "0.10": 4,
+        "0.9": 5,
+        "0.8": 6,
+        "invalid": 7,
+        "not available": 8,
+        "unknown version": 9
+    }
+
+    counterLock.acquire()
+    counter[int(counterIdx[apistate])] = counter[int(counterIdx[apistate])] + 1
+    counter[int(counterIdx["sum"])] = counter[int(counterIdx["sum"])] + 1
+    directory.append({"name": spacename, "apistate": apistate, "url": url})
+    counterLock.release()
 
 
-def loadSpaceAPI(spacename,url,points,directory):
-
-
+def loadSpaceAPI(spacename, url, points, directory, counter, counterLock):
     try:
         r = json.loads(requests.get(url=url,timeout=5).text)
     except Exception as e:
-        directory.append({"name":spacename,"apistate":"not available","url":url})
         logger.error(spacename + ": " + str(e))
+        addToDir(directory,spacename,"not available",url)
         return
 
-    try:
+    if "api" in r:
         if r["api"] == "0.13":
             try:
                 jsonschema.validate(r,schema13)
             except Exception as e:
                 logger.error("Invalid: %s" % str(spacename))
-                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                addToDir(directory,spacename,"invalid",url)
                 return
 
-            directory.append({"name":spacename,"apistate":"0.13","url":url})
+            addToDir(directory,spacename,"0.13",url)
             points.append(parser13.parse(spacename,r))
 
-        if r["api"] == "0.12":
+        elif r["api"] == "0.12":
             try:
                 jsonschema.validate(r,schema12)
             except Exception as e:
                 logger.error("Invalid: %s" % str(spacename))
-                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                addToDir(directory,spacename,"invalid",url)
                 return
 
-            directory.append({"name":spacename,"apistate":"0.12","url":url})
-        if r["api"] == "0.11":
+            addToDir(directory,spacename,"0.12",url)
+
+        elif r["api"] == "0.11":
             try:
                 jsonschema.validate(r,schema11)
             except Exception as e:
                 logger.error("Invalid: %s" % str(spacename))
-                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                addToDir(directory,spacename,"invalid",url)
                 return
 
-            directory.append({"name":spacename,"apistate":"0.11","url":url})
-        if r["api"] == "0.10":
-            directory.append({"name":spacename,"apistate":"0.10","url":url})
-        if r["api"] == "0.9":
+            addToDir(directory,spacename,"0.11",url)
+
+        elif r["api"] == "0.10":
+            try:
+                jsonschema.validate(r, schema9)
+            except Exception as e:
+                logger.error("Invalid")
+                addToDir(directory,spacename,"invalid",url)
+                return
+
+            addToDir(directory,spacename,"0.10",url)
+
+        elif r["api"] == "0.9":
             try:
                 jsonschema.validate(r,schema9)
             except Exception as e:
                 logger.error("Invalid")
-                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                addToDir(directory,spacename,"invalid",url)
                 return
 
-            directory.append({"name":spacename,"apistate":"0.9","url":url})
-        if r["api"] == "0.8":
+            addToDir(directory,spacename,"0.9",url)
+
+        elif r["api"] == "0.8":
             try:
                 jsonschema.validate(r,schema8)
             except Exception as e:
                 logger.error("Invalid: %s" % str(spacename))
-                directory.append({"name": spacename, "apistate": "invalid", "url": url})
+                addToDir(directory,spacename,"invalid",url)
                 return
 
-            directory.append({"name":spacename,"apistate":"0.8","url":url})
-    except Exception as e:
-        logger.error(spacename + ": " + str(spacename) + " - " + str(e))
-        directory.append({"name":spacename,"apistate":"unknown version","url":url})
+            addToDir(directory,spacename,"0.8",url)
+        else:
+            logger.error("UNKNOWN VERSION: "+spacename + ": " + str(spacename))
+            addToDir(directory,spacename,"unknown version",url)
+
+    else:
+        logger.error("Invalid: %s" % str(spacename))
+        addToDir(directory,spacename,"invalid",url)
 
 
 if __name__ == '__main__':
@@ -143,10 +176,28 @@ if __name__ == '__main__':
     manager = Manager()
     points = manager.list()
     directory = manager.list()
+    counter = manager.list(range(10))
     processes = []
+    counterLock = Lock()
+
+    for i in range(10):
+        counter[i] = 0
+
+    counterIdx = {
+        "sum": 0,
+        "0.13": 1,
+        "0.12": 2,
+        "0.11": 3,
+        "0.10": 4,
+        "0.9": 5,
+        "0.8": 6,
+        "invalid": 7,
+        "not available": 8,
+        "unknown version": 9
+    }
 
     for spacename in dir:
-        p = Process(target=loadSpaceAPI, args=(spacename,dir[spacename],points,directory))
+        p = Process(target=loadSpaceAPI, args=(spacename, dir[spacename], points, directory, counter, counterLock))
         processes.append(p)
         p.start()
 
@@ -156,6 +207,22 @@ if __name__ == '__main__':
 
     logger.info("JOINED")
 
+    general = {
+        "measurement": "GeneralInformation",
+        "fields": {
+            "sum": counter[int(counterIdx["sum"])],
+            "0.13": counter[int(counterIdx["0.13"])],
+            "0.12": counter[int(counterIdx["0.12"])],
+            "0.11": counter[int(counterIdx["0.11"])],
+            "0.10": counter[int(counterIdx["0.10"])],
+            "0.9": counter[int(counterIdx["0.9"])],
+            "0.8": counter[int(counterIdx["0.8"])],
+            "invalid": counter[int(counterIdx["invalid"])],
+            "not available": counter[int(counterIdx["not available"])],
+            "unknown version": counter[int(counterIdx["unknown version"])]
+        }
+    }
+
     if USE_EXPORT_DIRECTORY:
         with open('directory_crawled.json', "w", encoding='utf-8') as f:
             d = [ x for x in directory]
@@ -164,4 +231,9 @@ if __name__ == '__main__':
 
     if USE_INFLUX:
         logger.info("Write to INFLUX" + str(points))
+
+        points.append(general)
+
         client.write_points(points)
+
+
