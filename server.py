@@ -13,7 +13,7 @@ import jsonschema
 from werkzeug.routing import PathConverter
 
 class EverythingConverter(PathConverter):
-    regex = '.*?'
+	regex = '.*?'
 
 
 
@@ -42,16 +42,16 @@ logger.addHandler(ch)
 
 @app.after_request
 def add_header(response):
-    response.headers['Cache-Control'] = 'must-validate'
-    return response
+	response.headers['Cache-Control'] = 'must-validate'
+	return response
 
 def sigterm_handler(_signo,_stack_frame):
-    logger.info("SIGTERM received. Cleaning up...")
-    sys.exit(0)
+	logger.info("SIGTERM received. Cleaning up...")
+	sys.exit(0)
 
 def sigint_handler(_signo, _stack_frame):
-    logger.info("SIGINT received. Cleaning up...")
-    sys.exit(0)
+	logger.info("SIGINT received. Cleaning up...")
+	sys.exit(0)
 
 logger.info("Running version "+VERSION)
 logger.info("Starting DirectoryMirrorServer...")
@@ -70,29 +70,29 @@ schema13 = json.load(open("schema-master/13.json","r"))
 from markupsafe import Markup
 @app.template_filter('urlencode')
 def urlencode_filter(s):
-    if type(s) == 'Markup':
-        s = s.unescape()
-    s = s.encode('utf8')
-    s = urllib.parse.quote(s)
-    return Markup(s)
+	if type(s) == 'Markup':
+		s = s.unescape()
+	s = s.encode('utf8')
+	s = urllib.parse.quote(s)
+	return Markup(s)
 
 def printUsage():
-    print("Usage: server.py")
+	print("Usage: server.py")
 
 @app.route("/")
 def showHome():
-    f =  open('directory_crawled.json')
-    data = json.load(f)
-    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat('directory_crawled.json')
-    resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data, lastupdate=time.ctime(mtime)), 200)
-    resp.headers["Content-type"] = "text/html; charset=utf-8"
-    return resp
+	f =  open('directory_crawled.json')
+	data = json.load(f)
+	(mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat('directory_crawled.json')
+	resp = flask.make_response(flask.render_template('home.html', version=VERSION, directory=data, lastupdate=time.ctime(mtime)), 200)
+	resp.headers["Content-type"] = "text/html; charset=utf-8"
+	return resp
 
 @app.route("/doc.html")
 def showDoc():
-    resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
-    resp.headers["Content-type"] = "text/html; charset=utf-8"
-    return resp
+	resp = flask.make_response(flask.render_template('doc.html', version=VERSION), 200)
+	resp.headers["Content-type"] = "text/html; charset=utf-8"
+	return resp
 
 @app.route("/spaces")
 def showDirectory():
@@ -112,80 +112,97 @@ def showSpace(spacename):
 @app.route("/stats/<everything:spacename>.html")
 def showSpaceStats(spacename):
 	(template, api, code, errormsg) = getStatsPage(spacename)
-	resp = flask.make_response(flask.render_template(template, version=VERSION, api=api, spacename=spacename,errormsg=errormsg), code)
+	measurements = []
+	if "sensors" in api:
+		for sensortype in api["sensors"]:
+			for sensor in api["sensors"][sensortype]:
+				t = sensortype
+				if "location" in sensor:
+					t = t + "_"
+					t = t + sensor["location"]
+				if "name" in sensor:
+					t = t + "_"
+					t = t + sensor["name"]
+				if "unit" in sensor:
+					t = t + "_"
+					t = t + sensor["unit"]
+				measurements.append(t)
+
+
+	resp = flask.make_response(flask.render_template(template, version=VERSION, api=api, spacename=spacename,errormsg=errormsg,measurements=measurements), code)
 	resp.headers["Content-type"] = "text/html; charset=utf-8"
 	return resp
 
 def getStatsPage(spacename):
-    with open('directory.json',encoding='utf-8') as f:
-        data = json.load(f)
-        spacename = urllib.parse.unquote(spacename)
-        logger.info("Looking up: "+spacename)
-        try:
-            URL = data[spacename]
-        except Exception as e:
-            logger.warn("Space not in directory!")
-            return ("spacestatsError.html",json.loads('{"error":"Space not in directory!", "errorcode":-4}'),404,str(e))
+	with open('directory.json',encoding='utf-8') as f:
+		data = json.load(f)
+		spacename = urllib.parse.unquote(spacename)
+		logger.info("Looking up: "+spacename)
+		try:
+			URL = data[spacename]
+		except Exception as e:
+			logger.warn("Space not in directory!")
+			return ("spacestatsError.html",json.loads('{"error":"Space not in directory!", "errorcode":-4}'),404,str(e))
 
-        try:
-            r = json.loads(requests.get(url=URL).text)
-            if r["api"] == "0.13":
+		try:
+			r = json.loads(requests.get(url=URL).text)
+			if r["api"] == "0.13":
 
-                try:
-                    jsonschema.validate(r, schema13)
-                    return ("spacestatsv0.13.html", r, 200, None)
-                except Exception as e:
-                    logger.warn("No valid SpaceAPI found!")
-                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
-            elif r["api"] == "0.12":
-                try:
-                    jsonschema.validate(r, schema12)
-                    return ("spacestatsv0.12.html", r, 200, None)
-                except Exception as e:
-                    logger.warn("No valid SpaceAPI found!")
-                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
-            elif r["api"] == "0.11" or r["api"] == "0.10":
-                try:
-                    jsonschema.validate(r, schema11)
-                    return ("spacestatsv0.12.html", r, 200, None)
-                except Exception as e:
-                    logger.warn("No valid SpaceAPI found!")
-                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
-            elif r["api"] == "0.9":
-                try:
-                    jsonschema.validate(r, schema9)
-                    return ("spacestatsv0.12.html", r, 200, None)
-                except Exception as e:
-                    logger.warn("No valid SpaceAPI found!")
-                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7,"errormsg":"%s"}' % str(e)),404, str(e))
-            elif r["api"] == "0.8":
-                try:
-                    jsonschema.validate(r, schema8)
-                    return ("spacestatsv0.8.html", r, 200, None)
-                except Exception as e:
-                    logger.warn("No valid SpaceAPI found!")
-                    return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'), 404,"No valid SpaceAPI found!")
-            else:
-                logger.warn("No template for this api version!")
-                return ("spacestatsError.html",json.loads('{"error":"No template for this api version! '+r["api"]+'", "errorcode":-5}'),404,"No template for this api version!")
-        except Exception as e:
-            logger.warn("Could not load json!")
-            return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404,str(e))
+				try:
+					jsonschema.validate(r, schema13)
+					return ("spacestatsv0.13.html", r, 200, None)
+				except Exception as e:
+					logger.warn("No valid SpaceAPI found!")
+					return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
+			elif r["api"] == "0.12":
+				try:
+					jsonschema.validate(r, schema12)
+					return ("spacestatsv0.12.html", r, 200, None)
+				except Exception as e:
+					logger.warn("No valid SpaceAPI found!")
+					return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
+			elif r["api"] == "0.11" or r["api"] == "0.10":
+				try:
+					jsonschema.validate(r, schema11)
+					return ("spacestatsv0.12.html", r, 200, None)
+				except Exception as e:
+					logger.warn("No valid SpaceAPI found!")
+					return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'),404, str(e))
+			elif r["api"] == "0.9":
+				try:
+					jsonschema.validate(r, schema9)
+					return ("spacestatsv0.12.html", r, 200, None)
+				except Exception as e:
+					logger.warn("No valid SpaceAPI found!")
+					return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7,"errormsg":"%s"}' % str(e)),404, str(e))
+			elif r["api"] == "0.8":
+				try:
+					jsonschema.validate(r, schema8)
+					return ("spacestatsv0.8.html", r, 200, None)
+				except Exception as e:
+					logger.warn("No valid SpaceAPI found!")
+					return ("spacestatsError.html", json.loads('{"error":"No valid SpaceAPI found!", "errorcode":-7}'), 404,"No valid SpaceAPI found!")
+			else:
+				logger.warn("No template for this api version!")
+				return ("spacestatsError.html",json.loads('{"error":"No template for this api version! '+r["api"]+'", "errorcode":-5}'),404,"No template for this api version!")
+		except Exception as e:
+			logger.warn("Could not load json!")
+			return ("spacestatsError.html",json.loads('{"error":"Could not load json!", "errorcode":-6}'),404,str(e))
 
 def getSpaceJSON(spacename):
-    with open('directory.json',encoding='utf-8') as f:
-        data = json.load(f)
-        spacename = urllib.parse.unquote(spacename)
-        logger.info("Looking up: "+spacename)
-        try:
-            URL = data[spacename]
-        except:
-            return ('{"error":"Space not in directory!", "errorcode":-1}',404)
+	with open('directory.json',encoding='utf-8') as f:
+		data = json.load(f)
+		spacename = urllib.parse.unquote(spacename)
+		logger.info("Looking up: "+spacename)
+		try:
+			URL = data[spacename]
+		except:
+			return ('{"error":"Space not in directory!", "errorcode":-1}',404)
 
-        try:
-            return (requests.get(url=URL).text,200)
-        except:
-            return ('{"error":"Could not load json!", "errorcode":-2}',404)
+		try:
+			return (requests.get(url=URL).text,200)
+		except:
+			return ('{"error":"Could not load json!", "errorcode":-2}',404)
 
 
 app.run(port=5001)
