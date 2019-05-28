@@ -76,8 +76,8 @@ def addSense():
 		measurement = {
 			"measurement": dat["node"],
 			"fields": {
-				"temperature": dat["temperature"],
-				"humidity": dat["humidity"]
+				"temperature": float(dat["temperature"]),
+				"humidity": float(dat["humidity"])
 			}
 		}
 
