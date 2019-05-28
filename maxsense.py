@@ -72,6 +72,7 @@ def printUsage():
 def addSense():
 	try:
 		dat = json.loads(flask.request.data)
+		print(dat)
 
 		measurement = {
 			"measurement": dat["node"],
@@ -82,8 +83,8 @@ def addSense():
 		}
 
 		if USE_INFLUX:
-			logger.info("Write to INFLUX" + str(measurement))
-			client.write_point(measurement)
+			logger.info("Write to INFLUX")
+			client.write_points([measurement])
 
 		resp = flask.make_response("<html><h1>OK</h1></html>", 200)
 		resp.headers["Content-type"] = "text/html; charset=utf-8"
@@ -95,4 +96,4 @@ def addSense():
 
 
 
-app.run(port=5001)
+app.run(port=5002)
