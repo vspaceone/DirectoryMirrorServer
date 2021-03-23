@@ -1,5 +1,7 @@
 # SpaceAPI Directory Mirror
 
+This is server mirror the SpaceAPI Directory. It also provides a Web-GUI for the SpaceAPI. Find a demopage [here](directorymirrorserver.noppelmax.online). Unfortunately statistics are currently not running right now.
+
 ## Install
 Install anaconda.
 
